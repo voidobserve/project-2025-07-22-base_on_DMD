@@ -1,5 +1,7 @@
 #include "key_driver.h"
 
+#if (TOUCH_KEY_ENABLE || AD_KEY_ENABLE)
+
 enum
 {
     KEY_SCAN_STATUS_NONE = 0,       // 无特殊状态
@@ -7,7 +9,7 @@ enum
     KEY_SCAN_STATUS_TO_END_OF_SCAN, // 按键扫描结束，进行收尾处理
 };
 
-static volatile u8 is_key_active = 0; // 按键是否有效的计数值
+static volatile u8 is_key_active; // 按键是否有效的计数值
 
 //=======================================================//
 // 按键扫描函数: 扫描所有注册的按键驱动
@@ -266,3 +268,5 @@ _scan_end:
     return;
 #endif
 }
+
+#endif // #if (TOUCH_KEY_ENABLE  || AD_KEY_ENABLE)

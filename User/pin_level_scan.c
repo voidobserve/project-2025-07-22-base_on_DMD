@@ -1,21 +1,51 @@
 #include "pin_level_scan.h"
 
-u16 pin_level_scan_time_cnt = 0;
+#if PIN_LEVEL_SCAN_ENABLE
+
+volatile u16 pin_level_scan_time_cnt;
 
 void pin_level_scan_config(void)
 {
-    p21_input_config(); // 远光灯状态对应的引脚
-    p22_input_config(); // 右转向灯状态对应的引脚
+#if 0
+    // p21_input_config(); // 远光灯状态对应的引脚
+    // 配置为输入模式
+    P2_MD0 &= ~(GPIO_P21_MODE_SEL(0x3));
+    // 配置为上拉
+    P2_PU |= (GPIO_P21_PULL_UP(0x1));
+
+    // p22_input_config(); // 右转向灯状态对应的引脚
+    // 配置为输入模式
+    P2_MD0 &= ~(GPIO_P22_MODE_SEL(0x3));
+    P2_PU |= (GPIO_P22_PULL_UP(0x1)); // 上拉
+
     // p23_input_config(); // 刹车状态对应的引脚
     p25_input_config(); // 左转向灯状态对应的引脚
+    // 配置为输入模式
+    P2_MD1 &= ~(GPIO_P25_MODE_SEL(0x3));
+    // 配置为上拉
+    P2_PU |= (GPIO_P25_PULL_UP(0x1));
+#endif
 
-    p27_input_config(); // 6档对应的引脚
-    p30_input_config(); // 5档对应的引脚
-    p14_input_config(); // 4档对应的引脚
-    p13_input_config(); // 3档对应的引脚
-    p10_input_config(); // 2档对应的引脚
-    p07_input_config(); // 1档对应的引脚
-    p06_input_config(); // 空挡对应的引脚
+    // 6档对应的引脚 （硬件原因，挡位检测脚不用开上拉）
+    P2_MD1 &= ~(GPIO_P27_MODE_SEL(0x3)); // 配置为输入模式
+
+    // 5档对应的引脚 （硬件原因，挡位检测脚不用开上拉）
+    P3_MD0 &= ~(GPIO_P30_MODE_SEL(0x3)); // 配置为输入模式
+
+    // 4档对应的引脚 （硬件原因，挡位检测脚不用开上拉）
+    P1_MD1 &= ~(GPIO_P14_MODE_SEL(0x3)); // 配置为输入模式
+
+    // 3档对应的引脚 （硬件原因，挡位检测脚不用开上拉）
+    P1_MD0 &= ~(GPIO_P13_MODE_SEL(0x3)); // 配置为输入模式
+
+    // 2档对应的引脚 （硬件原因，挡位检测脚不用开上拉）
+    P1_MD0 &= ~(GPIO_P10_MODE_SEL(0x3)); // 配置为输入模式
+
+    // 1档对应的引脚 （硬件原因，挡位检测脚不用开上拉）
+    P0_MD1 &= ~(GPIO_P07_MODE_SEL(0x3)); // 配置为输入模式
+    
+    // 空挡对应的引脚 （硬件原因，挡位检测脚不用开上拉）
+    P0_MD1 &= ~(GPIO_P06_MODE_SEL(0x3)); // 配置为输入模式
 
     // 检测故障状态的引脚:
     P2_MD0 &= ~(GPIO_P20_MODE_SEL(0x03)); // 输入模式
@@ -35,20 +65,21 @@ void pin_level_scan(void)
         pin_level_scan_time_cnt = 0;
 
 #if 0  // 刹车检测
-        // if (PIN_DETECT_BRAKE)
-        // {
-        //     // 如果没有刹车
-        //     fun_info.brake = OFF;
-        // }
-        // else
-        // {
-        //     // 如果有刹车
-        //     fun_info.brake = ON;
-        // }
+       // if (PIN_DETECT_BRAKE)
+       // {
+       //     // 如果没有刹车
+       //     fun_info.brake = OFF;
+       // }
+       // else
+       // {
+       //     // 如果有刹车
+       //     fun_info.brake = ON;
+       // }
 
         // flag_get_brake = 1;
 #endif // 刹车检测
 
+#if 0
         if (PIN_DETECT_LEFT_TURN)
         {
             // 如果左转向灯未开启
@@ -84,9 +115,9 @@ void pin_level_scan(void)
             fun_info.high_beam = ON;
         }
         flag_get_high_beam = 1;
+#endif
 
         // 以最低挡位优先，当最低档有信号时，不管其他挡位的信号，直接以最低档的为主
-
         if (0 == PIN_DETECT_NEUTRAL_GEAR)
         {
             // 空挡
@@ -159,3 +190,5 @@ void pin_level_scan(void)
     //     P03 = 0;
     // }
 }
+
+#endif

@@ -4,6 +4,8 @@
 #include "include.h"   // 使用芯片官方提供的头文件
 #include "my_config.h" // 包含自定义的头文件
 
+#if FUEL_CAPACITY_SCAN_ENABLE
+
 // ======================================================
 // 油量检测配置：
 // 油量检测并更新的时间(单位：ms)
@@ -59,4 +61,5 @@ extern u32 fuel_capacity_scan_cnt; // 扫描时间计数，在1ms定时器中断
 
 void fuel_capacity_scan(void);
 
+#endif // FUEL_CAPACITY_SCAN_ENABLE
 #endif

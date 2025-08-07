@@ -4,6 +4,7 @@
 #include "include.h"   // 使用芯片官方提供的头文件
 #include "my_config.h" // 包含自定义的头文件
 
+#if SPEED_SCAN_ENABLE
 // ======================================================
 // 检测时速所需的配置：
 #define SPEED_SCAN_PIN P15 // 检测时速的引脚
@@ -52,4 +53,5 @@ extern volatile u32 speed_scan_time_ms;
 void speed_scan_config(void);
 void speed_scan(void);
 
+#endif // SPEED_SCAN_ENABLE
 #endif

@@ -29,24 +29,29 @@ void tmr2_config(void)
     TMR2_PRH = TMR_PERIOD_VAL_H((TMR2_PERIOD >> 8) & 0xFF); // 周期值
     TMR2_PRL = TMR_PERIOD_VAL_L((TMR2_PERIOD >> 0) & 0xFF);
 
-    TMR2_CONL &= ~(TMR_SOURCE_SEL(0x07)); // 清除TMR2的时钟源配置寄存器
-    TMR2_CONL |= TMR_SOURCE_SEL(0x05);    // 配置TMR2的时钟源，不用任何时钟
+    // TMR2_CONL &= ~(TMR_SOURCE_SEL(0x07)); // 清除TMR2的时钟源配置寄存器
+    // TMR2_CONL |= TMR_SOURCE_SEL(0x05);    // 配置TMR2的时钟源，不用任何时钟
     TMR2_CONH &= ~TMR_PRD_PND(0x01);      // 清除TMR2的计数标志位，表示未完成计数
     TMR2_CONH |= TMR_PRD_IRQ_EN(1);       // 使能TMR2的计数中断
-}
 
-/**
- * @brief 开启定时器TMR2，开始计时
- */
-void tmr2_enable(void)
-{
-    // 重新给TMR2配置时钟
     TMR2_CONL &= ~(TMR_SOURCE_SEL(0x07)); // 清除定时器的时钟源配置寄存器
     TMR2_CONL |= TMR_SOURCE_SEL(0x06);    // 配置定时器的时钟源，使用系统时钟
 
-    __EnableIRQ(TMR2_IRQn); // 使能中断
-    IE_EA = 1;              // 打开总中断
+    __EnableIRQ(TMR2_IRQn); // 使能中断 
 }
+
+// /**
+//  * @brief 开启定时器TMR2，开始计时
+//  */
+// void tmr2_enable(void)
+// {
+//     // 重新给TMR2配置时钟
+//     TMR2_CONL &= ~(TMR_SOURCE_SEL(0x07)); // 清除定时器的时钟源配置寄存器
+//     TMR2_CONL |= TMR_SOURCE_SEL(0x06);    // 配置定时器的时钟源，使用系统时钟
+
+//     __EnableIRQ(TMR2_IRQn); // 使能中断
+//     IE_EA = 1;              // 打开总中断
+// }
 
 #if 0  // void tmr2_disable(void)
 /**
@@ -65,13 +70,24 @@ void tmr2_disable(void)
 #endif // void tmr2_disable(void)
 
 extern void update_engine_speed_scan_data(void); // 更新检测发动机转速的数据
+#if SPEED_SCAN_ENABLE
 extern void update_speed_scan_data(void);
+#endif // #if SPEED_SCAN_ENABLE
 // TMR2中断服务函数
 void TIMR2_IRQHandler(void) interrupt TMR2_IRQn
 {
-    // 上升沿检测
+// 上升沿检测
+#if ENGINE_SPEED_SCAN_ENABLE
+
     static volatile bit last_engine_speed_scan_level = 0; // 记录上一次检测到的引脚电平（发送机转速检测脚）
-    static volatile bit last_speed_scan_level = 0;        // 记录上一次检测到的引脚电平（时速检测脚）
+
+#endif // #if ENGINE_SPEED_SCAN_ENABLE
+
+#if SPEED_SCAN_ENABLE
+
+    static volatile bit last_speed_scan_level = 0; // 记录上一次检测到的引脚电平（时速检测脚）
+
+#endif // #if SPEED_SCAN_ENABLE
 
     // 进入中断设置IP，不可删除
     __IRQnIPnPush(TMR2_IRQn);
@@ -83,6 +99,8 @@ void TIMR2_IRQHandler(void) interrupt TMR2_IRQn
     {
         TMR2_CONH |= TMR_PRD_PND(0x1); // 清除pending
 
+#if ENGINE_SPEED_SCAN_ENABLE
+
         { // 记录发动机转速扫描的时间
             static u8 cnt = 0;
             cnt++;
@@ -90,7 +108,7 @@ void TIMR2_IRQHandler(void) interrupt TMR2_IRQn
             {
                 cnt = 0;
                 engine_speed_scan_ms++;
-                
+
                 if (engine_speed_scan_ms >= ENGINE_SPEED_SCAN_OVER_TIME &&
                     flag_is_engine_speed_scan_over_time == 0)
                 {
@@ -121,6 +139,9 @@ void TIMR2_IRQHandler(void) interrupt TMR2_IRQn
             last_engine_speed_scan_level = 0;
         }
 
+#endif // #if ENGINE_SPEED_SCAN_ENABLE
+
+#if SPEED_SCAN_ENABLE
         { // 记录时速扫描的时间
             static u16 cnt = 0;
             cnt++;
@@ -129,7 +150,7 @@ void TIMR2_IRQHandler(void) interrupt TMR2_IRQn
                 cnt = 0;
                 speed_scan_time_ms++; // 每1ms加一
 
-                // 600ms，为了滤掉1Hz的脉冲，认为 1Hz==0km/h 
+                // 600ms，为了滤掉1Hz的脉冲，认为 1Hz==0km/h
                 if (speed_scan_time_ms >= SPEED_SCAN_OVER_TIME &&
                     flag_is_speed_scan_over_time == 0)
                 {
@@ -162,6 +183,7 @@ void TIMR2_IRQHandler(void) interrupt TMR2_IRQn
             // 如果现在检测到低电平
             last_speed_scan_level = 0;
         }
+#endif
     }
 
     // P20 = 0; // 测试中断持续时间
