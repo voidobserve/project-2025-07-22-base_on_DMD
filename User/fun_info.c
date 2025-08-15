@@ -72,6 +72,10 @@ void fun_info_init(void)
         is_data_valid 都不等于 EEPROM_DATA_VALID_VAL，
         那么 fun_info.save_info 应该没有被赋值，都为0
     */
+
+    // printf("total_mileage %lu\n", fun_info.save_info.total_mileage);
+    // printf("sub_total_mileage %lu\n", fun_info.save_info.subtotal_mileage);
+    // printf("sub_total_mileage_2 %lu\n", fun_info.save_info.subtotal_mileage_2);
 }
 
 // 保存 存放了所有信息的结构体变量，写入flash中

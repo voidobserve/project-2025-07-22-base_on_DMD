@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   SPEED_SCAN                                                        08/07/2025 18:02:28 PAGE 1   
+C51 COMPILER V9.60.7.0   SPEED_SCAN                                                        08/15/2025 17:22:18 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE SPEED_SCAN
@@ -62,7 +62,7 @@ line level    source
   48   3              }
   49   2              else // 未超时，计算采集到的脉冲个数对应走过的距离，再转换成以km/h的�
              -�位
-C51 COMPILER V9.60.7.0   SPEED_SCAN                                                        08/07/2025 18:02:28 PAGE 2   
+C51 COMPILER V9.60.7.0   SPEED_SCAN                                                        08/15/2025 17:22:18 PAGE 2   
 
   50   2              {
   51   3                  /*

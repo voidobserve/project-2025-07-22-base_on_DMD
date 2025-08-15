@@ -56,6 +56,12 @@ void mileage_scan(void)
         fun_info_save();
         flag_is_any_mileage_save = 0;
         mileage_save_time_cnt = 0;
+
+        // printf("mile save\n");
+
+        // printf("total_mileage %lu\n", fun_info.save_info.total_mileage);
+        // printf("sub_total_mileage %lu\n", fun_info.save_info.subtotal_mileage);
+        // printf("sub_total_mileage_2 %lu\n", fun_info.save_info.subtotal_mileage_2);
     }
 
     if (distance >= 1000) // 1000mm -- 1m

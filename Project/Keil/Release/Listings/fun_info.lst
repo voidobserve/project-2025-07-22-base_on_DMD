@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   FUN_INFO                                                          08/07/2025 18:02:28 PAGE 1   
+C51 COMPILER V9.60.7.0   FUN_INFO                                                          08/15/2025 17:22:18 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE FUN_INFO
@@ -62,7 +62,7 @@ line level    source
   50   2                  得到的奇数，作为同一组页面的第二个页面 next
   51   2              */
   52   2              page_id -= 1;
-C51 COMPILER V9.60.7.0   FUN_INFO                                                          08/07/2025 18:02:28 PAGE 2   
+C51 COMPILER V9.60.7.0   FUN_INFO                                                          08/15/2025 17:22:18 PAGE 2   
 
   53   2          }
   54   1      
@@ -86,19 +86,23 @@ line level    source
   72   1              is_data_valid 都不等于 EEPROM_DATA_VALID_VAL，
   73   1              那么 fun_info.save_info 应该没有被赋值，都为0
   74   1          */
-  75   1      }
-  76          
-  77          // 保存 存放了所有信息的结构体变量，写入flash中
-  78          void fun_info_save(void)
-  79          {
-  80   1          // DEBUG ：
-  81   1          // printf("eeprom save begin\n"); // 打印这句话时，可以试试突然断电，测试eeprom突�
-             -�断电后，会不会影响整个里程记录的数据
-  82   1          eeprom_data_save();
-  83   1      
+  75   1      
+  76   1          // printf("total_mileage %lu\n", fun_info.save_info.total_mileage);
+  77   1          // printf("sub_total_mileage %lu\n", fun_info.save_info.subtotal_mileage);
+  78   1          // printf("sub_total_mileage_2 %lu\n", fun_info.save_info.subtotal_mileage_2);
+  79   1      }
+  80          
+  81          // 保存 存放了所有信息的结构体变量，写入flash中
+  82          void fun_info_save(void)
+  83          {
   84   1          // DEBUG ：
-  85   1          // printf("eeprom save\n");
-  86   1      }
+  85   1          // printf("eeprom save begin\n"); // 打印这句话时，可以试试突然断电，测试eeprom突�
+             -�断电后，会不会影响整个里程记录的数据
+  86   1          eeprom_data_save();
+  87   1      
+  88   1          // DEBUG ：
+  89   1          // printf("eeprom save\n");
+  90   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

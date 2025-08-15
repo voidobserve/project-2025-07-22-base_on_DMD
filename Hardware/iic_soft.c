@@ -104,8 +104,8 @@ void eeprom_printf_all(void)
     printf("====================================================\n");
 
     // for (i = 2; i < 128; i++)
-    for (i = 2; i < EEPROM_PAGE_NUMS; i++)
-    // for (i = 2; i < 10; i++)
+    // for (i = 2; i < EEPROM_PAGE_NUMS; i++)
+    for (i = 2; i < 10; i++)
     {
         eeprom_24cxx_read(i, (u8 *)&eeprom_saveinfo, sizeof(eeprom_saveinfo_t));
         printf("cur_page_id %u\n", i);
@@ -123,7 +123,8 @@ void eeprom_printf_all(void)
 void eeprom_24cxx_clear(void)
 {
     u16 i;
-    const u8 clear_data = 0x00;
+    // const u8 clear_data = 0x00; // 要填充的数据 
+    const u8 clear_data = 0xFF; // 要填充的数据 
     for (i = 0; i < ((u16)128 * 32); i++)
     {
         while (iic_eeprom_write(i, (u8 *)&clear_data, 1))

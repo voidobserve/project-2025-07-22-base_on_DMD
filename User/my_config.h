@@ -15,7 +15,7 @@
 // extern volatile bit flag_debug_is_send_time_2; // 测试时使用
 
 #define TOUCH_KEY_ENABLE 0          // 是否使能触摸按键检测功能
-#define AD_KEY_ENABLE 1             // 是否使能ad按键检测功能
+#define AD_KEY_ENABLE 0             // 是否使能ad按键检测功能
 #define SPEED_SCAN_ENABLE 1         // 是否使能速度检测功能
 #define ENGINE_SPEED_SCAN_ENABLE 0  // 是否使能发动机转速检测功能
 #define BATTERY_SCAN_ENABLE 0       // 是否使能电池检测功能
